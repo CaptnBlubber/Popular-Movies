@@ -2,4 +2,8 @@
     <string name="app_name">Popular Movies</string>
 
     <string name="action_settings">Settings</string>
+    <string name="movie_details_title_rating">Rating</string>
+    <string name="movie_details_title_overview">Overview</string>
+    <string name="menu_popular_movies">Popular Movies</string>
+    <string name="wording_best_rated_movies">Best Rated Movies</string>
 </resources>

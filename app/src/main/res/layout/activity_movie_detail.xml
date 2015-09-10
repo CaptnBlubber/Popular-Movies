@@ -79,6 +79,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@+id/movie_poster"
+                        android:layout_toEndOf="@+id/movie_poster"
                          />
 
                     <TextView
@@ -88,6 +89,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/movie_title"
                         android:layout_toRightOf="@+id/movie_poster"
+                        android:layout_toEndOf="@+id/movie_poster"
                          />
 
 
@@ -98,7 +100,8 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/movie_release_date"
                         android:layout_toRightOf="@+id/movie_poster"
-                        android:text="1337 Minutes" />
+                        android:layout_toEndOf="@+id/movie_poster"
+                         />
 
 
                 </RelativeLayout>
@@ -119,7 +122,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Rating"
+                            android:text="@string/movie_details_title_rating"
                             android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
                         <RatingBar
@@ -157,7 +160,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Overview"
+                            android:text="@string/movie_details_title_overview"
                             android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
                         <TextView

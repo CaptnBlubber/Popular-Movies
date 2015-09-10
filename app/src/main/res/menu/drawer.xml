@@ -6,11 +6,11 @@
         <item
             android:id="@+id/drawer_popular_movies"
             android:checked="true"
-            android:title="Popular Movies" />
+            android:title="@string/menu_popular_movies" />
 
         <item
             android:id="@+id/drawer_best_rated_movies"
-            android:title="Best Rated Movies" />
+            android:title="@string/wording_best_rated_movies" />
 
     </group>
 </menu>
