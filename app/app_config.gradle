@@ -1,0 +1,7 @@
+android{
+    buildTypes {
+        all {
+            buildConfigField "String", "API_KEY", '"YOUR_API_KEY"'
+        }
+    }
+}

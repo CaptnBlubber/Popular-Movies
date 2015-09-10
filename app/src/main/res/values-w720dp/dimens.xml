@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="detail_backdrop_height">320dp</dimen>
+    <dimen name="movie_detail_poster_width">176dp</dimen>
+</resources>
