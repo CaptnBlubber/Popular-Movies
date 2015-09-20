@@ -9,7 +9,7 @@ import javax.inject.Inject;
 import de.s3xy.popularmovies.api.models.Movie;
 import de.s3xy.popularmovies.mvp.interactor.MovieCollectionInteractor;
 import de.s3xy.popularmovies.mvp.view.MovieCollectionView;
-import de.s3xy.popularmovies.ui.activity.MovieDetailActivity;
+import de.s3xy.popularmovies.ui.activity.MovieDetailFragmentActivity;
 import rx.Observer;
 
 /**
@@ -51,7 +51,7 @@ public class MovieCollectionPresenterImpl implements MovieCollectionPresenter {
 
     @Override
     public void goToDetails(Activity context, Movie t) {
-        MovieDetailActivity.startDetailActivity(context, t.getId());
+        MovieDetailFragmentActivity.startFragmentDetailActivity(context, t.getId());
     }
 
     private Observer<List<Movie>> getDefaultMovieObserver() {

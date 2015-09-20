@@ -1,24 +1,20 @@
 package de.s3xy.popularmovies.api.models;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-import javax.annotation.Generated;
-
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
         "adult",
         "backdrop_path",
-        "belongs_to_collection",
         "budget",
         "genres",
         "homepage",
@@ -42,14 +38,16 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "vote_average",
         "vote_count"
 })
-public class MovieDetail {
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+
+public class MovieDetail implements Parcelable {
 
     @JsonProperty("adult")
     private Boolean adult;
     @JsonProperty("backdrop_path")
     private String backdropPath;
-    @JsonProperty("belongs_to_collection")
-    private Object belongsToCollection;
+
     @JsonProperty("budget")
     private Integer budget;
     @JsonProperty("genres")
@@ -94,8 +92,6 @@ public class MovieDetail {
     private Double voteAverage;
     @JsonProperty("vote_count")
     private Integer voteCount;
-    @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      * @return The adult
@@ -129,21 +125,6 @@ public class MovieDetail {
         this.backdropPath = backdropPath;
     }
 
-    /**
-     * @return The belongsToCollection
-     */
-    @JsonProperty("belongs_to_collection")
-    public Object getBelongsToCollection() {
-        return belongsToCollection;
-    }
-
-    /**
-     * @param belongsToCollection The belongs_to_collection
-     */
-    @JsonProperty("belongs_to_collection")
-    public void setBelongsToCollection(Object belongsToCollection) {
-        this.belongsToCollection = belongsToCollection;
-    }
 
     /**
      * @return The budget
@@ -497,14 +478,81 @@ public class MovieDetail {
         this.voteCount = voteCount;
     }
 
-    @JsonAnyGetter
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    @JsonAnySetter
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.adult);
+        dest.writeString(this.backdropPath);
+        dest.writeValue(this.budget);
+        dest.writeList(this.genres);
+        dest.writeString(this.homepage);
+        dest.writeValue(this.id);
+        dest.writeString(this.imdbId);
+        dest.writeString(this.originalLanguage);
+        dest.writeString(this.originalTitle);
+        dest.writeString(this.overview);
+        dest.writeValue(this.popularity);
+        dest.writeString(this.posterPath);
+        dest.writeList(this.productionCompanies);
+        dest.writeList(this.productionCountries);
+        dest.writeString(this.releaseDate);
+        dest.writeValue(this.revenue);
+        dest.writeValue(this.runtime);
+        dest.writeList(this.spokenLanguages);
+        dest.writeString(this.status);
+        dest.writeString(this.tagline);
+        dest.writeString(this.title);
+        dest.writeValue(this.video);
+        dest.writeValue(this.voteAverage);
+        dest.writeValue(this.voteCount);
     }
 
+    public MovieDetail() {
+    }
+
+    protected MovieDetail(Parcel in) {
+        this.adult = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.backdropPath = in.readString();
+        this.budget = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.genres = new ArrayList<Genre>();
+        in.readList(this.genres, List.class.getClassLoader());
+        this.homepage = in.readString();
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.imdbId = in.readString();
+        this.originalLanguage = in.readString();
+        this.originalTitle = in.readString();
+        this.overview = in.readString();
+        this.popularity = (Double) in.readValue(Double.class.getClassLoader());
+        this.posterPath = in.readString();
+        this.productionCompanies = new ArrayList<ProductionCompany>();
+        in.readList(this.productionCompanies, List.class.getClassLoader());
+        this.productionCountries = new ArrayList<ProductionCountry>();
+        in.readList(this.productionCountries, List.class.getClassLoader());
+        this.releaseDate = in.readString();
+        this.revenue = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.runtime = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.spokenLanguages = new ArrayList<SpokenLanguage>();
+        in.readList(this.spokenLanguages, List.class.getClassLoader());
+        this.status = in.readString();
+        this.tagline = in.readString();
+        this.title = in.readString();
+        this.video = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.voteAverage = (Double) in.readValue(Double.class.getClassLoader());
+        this.voteCount = (Integer) in.readValue(Integer.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<MovieDetail> CREATOR = new Parcelable.Creator<MovieDetail>() {
+        public MovieDetail createFromParcel(Parcel source) {
+            return new MovieDetail(source);
+        }
+
+        public MovieDetail[] newArray(int size) {
+            return new MovieDetail[size];
+        }
+    };
 }

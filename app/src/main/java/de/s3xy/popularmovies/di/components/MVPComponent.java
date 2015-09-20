@@ -6,6 +6,8 @@ import de.s3xy.popularmovies.di.modules.PresenterModule;
 import de.s3xy.popularmovies.di.scopes.ApplicationScope;
 import de.s3xy.popularmovies.ui.activity.MovieCollectionActivity;
 import de.s3xy.popularmovies.ui.activity.MovieDetailActivity;
+import de.s3xy.popularmovies.ui.activity.MovieDetailFragmentActivity;
+import de.s3xy.popularmovies.ui.fragment.MovieDetailFragment;
 
 /**
  * +        o     o       +        o
@@ -22,5 +24,7 @@ public interface MVPComponent {
 
     void inject(MovieCollectionActivity movieCollectionActivity);
     void inject(MovieDetailActivity movieDetailActivity);
+    void inject(MovieDetailFragment movieDetailFragment);
 
+    void inject(MovieDetailFragmentActivity movieDetailFragmentActivity);
 }
