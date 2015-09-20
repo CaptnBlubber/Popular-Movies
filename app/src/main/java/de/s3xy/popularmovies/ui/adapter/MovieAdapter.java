@@ -29,10 +29,10 @@ import de.s3xy.popularmovies.api.models.Movie;
  * +      o         o   +       o
  * Created by Angelo Rüggeberg on 05.08.15.
  */
-public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.TweetViewHolder> {
+public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
     private List<Movie> movieList;
-    private TweetViewHolder.IMovieInteractions mListener;
+    private MovieViewHolder.IMovieInteractions mListener;
 
     /**
      * Injectable constructor allows adapter injection
@@ -43,35 +43,31 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.TweetViewHol
     }
 
     @Override
-    public TweetViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v;
         v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_movie, parent, false);
-        return new TweetViewHolder(v, mListener);
+        return new MovieViewHolder(v, mListener);
     }
 
     @Override
-    public void onBindViewHolder(TweetViewHolder holder, int position) {
+    public void onBindViewHolder(MovieViewHolder holder, int position) {
         Movie movie = movieList.get(position);
         holder.mMovieTitle.setText(movie.getTitle());
 
         Glide.with(holder.view.getContext())
-                .load(movie.getPosterPath())
+                .load(movie.getHTTPPosterPath())
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(holder.mMoviePoster);
 
     }
 
-    public void registerTweetInteractionListener(TweetViewHolder.IMovieInteractions listener) {
+    public void registerMovieInteractionListener(MovieViewHolder.IMovieInteractions listener) {
         mListener = listener;
     }
 
 
     public Movie getMovie(int position) {
         return movieList.get(position);
-    }
-
-    public void unregisterTweetInteractionListener() {
-        mListener = null;
     }
 
     @Override
@@ -90,7 +86,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.TweetViewHol
         addMovies(movies);
     }
 
-    public static class TweetViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         IMovieInteractions mListener;
 
@@ -103,7 +99,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.TweetViewHol
         TextView mMovieTitle;
 
 
-        public TweetViewHolder(View itemView, IMovieInteractions listener) {
+        public MovieViewHolder(View itemView, IMovieInteractions listener) {
             super(itemView);
             this.view = itemView;
             mListener = listener;

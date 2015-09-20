@@ -1,9 +1,5 @@
 package de.s3xy.popularmovies.mvp.presenter;
 
-import android.app.Activity;
-
-import de.s3xy.popularmovies.api.models.Movie;
-import de.s3xy.popularmovies.mvp.view.MovieCollectionView;
 import de.s3xy.popularmovies.mvp.view.MovieDetailView;
 
 /**
@@ -17,4 +13,6 @@ import de.s3xy.popularmovies.mvp.view.MovieDetailView;
  */
 public interface MovieDetailPresenter extends Presenter<MovieDetailView>{
     void loadMovieDetails(int id);
+    void toggleFavorite(int id);
+    void getFavoriteState(int id);
 }

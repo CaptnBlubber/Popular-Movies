@@ -23,6 +23,7 @@ public class MovieCollectionPresenterImpl implements MovieCollectionPresenter {
     private static final int MODE_INVALID = 0;
     private static final int MODE_POPULAR_MOVIES = 1;
     private static final int MODE_BEST_RATED_MOVIES = 2;
+    private static final int MODE_FAVORITE_MOVIES = 3;
 
     private int mLastAPIMode = MODE_INVALID;
 
@@ -53,11 +54,7 @@ public class MovieCollectionPresenterImpl implements MovieCollectionPresenter {
         MovieDetailActivity.startDetailActivity(context, t.getId());
     }
 
-
-    @Override
-    public void loadBestRatedMovies() {
-        mLastAPIMode = MODE_BEST_RATED_MOVIES;
-        view.showLoading();
+    private Observer<List<Movie>> getDefaultMovieObserver() {
 
         Observer<List<Movie>> obs = new Observer<List<Movie>>() {
             @Override
@@ -67,6 +64,7 @@ public class MovieCollectionPresenterImpl implements MovieCollectionPresenter {
 
             @Override
             public void onError(Throwable e) {
+                view.hideLoading();
                 view.showError(e.getMessage());
             }
 
@@ -75,7 +73,16 @@ public class MovieCollectionPresenterImpl implements MovieCollectionPresenter {
                 view.showMovies(movies);
             }
         };
-        interactor.loadBestRatedMovies(obs);
+
+        return obs;
+    }
+
+
+    @Override
+    public void loadBestRatedMovies() {
+        mLastAPIMode = MODE_BEST_RATED_MOVIES;
+        view.showLoading();
+        interactor.loadBestRatedMovies(getDefaultMovieObserver());
 
     }
 
@@ -83,6 +90,12 @@ public class MovieCollectionPresenterImpl implements MovieCollectionPresenter {
     public void loadPopularMovies() {
         mLastAPIMode = MODE_POPULAR_MOVIES;
         view.showLoading();
+        interactor.loadPopularMovies(getDefaultMovieObserver());
+    }
+
+    @Override
+    public void loadFavoriteMovies() {
+        mLastAPIMode = MODE_FAVORITE_MOVIES;
 
         Observer<List<Movie>> obs = new Observer<List<Movie>>() {
             @Override
@@ -92,16 +105,24 @@ public class MovieCollectionPresenterImpl implements MovieCollectionPresenter {
 
             @Override
             public void onError(Throwable e) {
+                view.hideLoading();
                 view.showError(e.getMessage());
             }
 
             @Override
             public void onNext(List<Movie> movies) {
-                view.showMovies(movies);
+                if (movies.size() > 0) {
+                    view.showMovies(movies);
+                } else {
+                    view.showEmptyFavorites();
+                }
+
             }
         };
-        interactor.loadPopularMovies(obs);
 
+
+        view.showLoading();
+        interactor.loadFavoriteMovies(obs);
     }
 
     @Override
@@ -113,6 +134,9 @@ public class MovieCollectionPresenterImpl implements MovieCollectionPresenter {
                 break;
             case MODE_BEST_RATED_MOVIES:
                 loadBestRatedMovies();
+                break;
+            case MODE_FAVORITE_MOVIES:
+                loadFavoriteMovies();
                 break;
             default:
                 view.showError("Illegal Refresh State");

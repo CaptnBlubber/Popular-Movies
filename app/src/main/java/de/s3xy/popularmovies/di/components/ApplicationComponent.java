@@ -4,6 +4,7 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 import de.s3xy.popularmovies.di.modules.ApplicationModule;
+import de.s3xy.popularmovies.di.modules.DatabaseModule;
 import de.s3xy.popularmovies.di.modules.NetworkingModule;
 
 /**
@@ -17,7 +18,7 @@ import de.s3xy.popularmovies.di.modules.NetworkingModule;
  */
 
 @Singleton
-@Component(modules = {ApplicationModule.class, NetworkingModule.class})
+@Component(modules = {ApplicationModule.class, NetworkingModule.class, DatabaseModule.class})
 public interface ApplicationComponent {
     MVPComponent plus();
 }

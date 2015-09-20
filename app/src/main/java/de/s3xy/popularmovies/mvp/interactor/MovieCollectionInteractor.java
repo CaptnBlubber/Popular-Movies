@@ -12,5 +12,5 @@ public interface MovieCollectionInteractor {
 
     void loadPopularMovies(Observer<? super List<Movie>> observer);
     void loadBestRatedMovies(Observer<? super List<Movie>> observer);
-
+    void loadFavoriteMovies(Observer<? super List<Movie>> observer);
 }

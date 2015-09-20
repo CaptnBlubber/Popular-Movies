@@ -21,9 +21,7 @@
         </activity>
 
         <activity android:name=".ui.activity.MovieDetailActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activity.MovieCollectionActivity" />
+
         </activity>
 
 

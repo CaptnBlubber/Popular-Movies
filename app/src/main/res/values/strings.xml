@@ -6,4 +6,7 @@
     <string name="movie_details_title_overview">Overview</string>
     <string name="menu_popular_movies">Popular Movies</string>
     <string name="wording_best_rated_movies">Best Rated Movies</string>
+    <string name="wording_favorite_movies">Favorite Movies</string>
+    <string name="wording_missing_favorites_title">You don\'t have any Favorite Movies yet.</string>
+    <string name="wording_missing_favorites_hint">You can add Movies to your Favorites on a Movie Detail Page by clicking the Star Icon</string>
 </resources>

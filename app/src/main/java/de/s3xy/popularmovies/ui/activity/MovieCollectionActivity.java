@@ -9,6 +9,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import java.util.List;
 
@@ -25,7 +27,7 @@ import de.s3xy.popularmovies.ui.view.SpacingItemDecoration;
 import timber.log.Timber;
 
 
-public class MovieCollectionActivity extends BaseActivity implements MovieCollectionView, SwipeRefreshLayout.OnRefreshListener, MovieAdapter.TweetViewHolder.IMovieInteractions {
+public class MovieCollectionActivity extends BaseActivity implements MovieCollectionView, SwipeRefreshLayout.OnRefreshListener, MovieAdapter.MovieViewHolder.IMovieInteractions {
     @Inject
     MovieCollectionPresenter presenter;
 
@@ -33,6 +35,10 @@ public class MovieCollectionActivity extends BaseActivity implements MovieCollec
     RecyclerView mListMovies;
     @Bind(R.id.swipe_refresh_layout)
     SwipeRefreshLayout mRefreshLayout;
+    @Bind(R.id.empty_favorites)
+    LinearLayout emptyFavorites;
+
+    private boolean resumed = false;
 
     @Inject
     MovieAdapter mMovieAdapter;
@@ -53,7 +59,7 @@ public class MovieCollectionActivity extends BaseActivity implements MovieCollec
         initToolbar();
         setupDrawerLayout();
 
-        mMovieAdapter.registerTweetInteractionListener(this);
+        mMovieAdapter.registerMovieInteractionListener(this);
 
         mRefreshLayout.setOnRefreshListener(this);
 
@@ -70,7 +76,7 @@ public class MovieCollectionActivity extends BaseActivity implements MovieCollec
 
 
     protected void setupDrawerLayout() {
-        if(drawerLayout != null) {
+        if (drawerLayout != null) {
             NavigationView view = (NavigationView) findViewById(R.id.navigation_view);
             view.setNavigationItemSelectedListener(menuItem -> {
                 menuItem.setChecked(true);
@@ -82,6 +88,10 @@ public class MovieCollectionActivity extends BaseActivity implements MovieCollec
                     case R.id.drawer_popular_movies:
                         presenter.loadPopularMovies();
                         break;
+
+                    case R.id.drawer_favorite_movies:
+                        presenter.loadFavoriteMovies();
+                        break;
                 }
 
 
@@ -91,6 +101,21 @@ public class MovieCollectionActivity extends BaseActivity implements MovieCollec
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //If user Comes Back from Detail Activity we want to refresh
+        if (resumed) {
+            onRefresh();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        resumed = true;
+        super.onPause();
+    }
 
     @Override
     protected void onDestroy() {
@@ -139,6 +164,8 @@ public class MovieCollectionActivity extends BaseActivity implements MovieCollec
     @Override
     public void showMovies(List<Movie> movies) {
         mMovieAdapter.setMovies(movies);
+        mListMovies.setVisibility(View.VISIBLE);
+        emptyFavorites.setVisibility(View.GONE);
     }
 
     @Override
@@ -150,6 +177,12 @@ public class MovieCollectionActivity extends BaseActivity implements MovieCollec
                 .show();
 
         Timber.e(errorMessage);
+    }
+
+    @Override
+    public void showEmptyFavorites() {
+        mListMovies.setVisibility(View.GONE);
+        emptyFavorites.setVisibility(View.VISIBLE);
     }
 
     @Override

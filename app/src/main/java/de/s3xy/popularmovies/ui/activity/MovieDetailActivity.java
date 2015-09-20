@@ -6,9 +6,10 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -26,6 +27,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.s3xy.popularmovies.R;
 import de.s3xy.popularmovies.api.models.MovieDetail;
 import de.s3xy.popularmovies.mvp.presenter.MovieDetailPresenter;
@@ -69,6 +71,8 @@ public class MovieDetailActivity extends BaseActivity implements MovieDetailView
     LinearLayout movieContent;
     @Bind(R.id.loading)
     ProgressBar loading;
+    @Bind(R.id.fab_movie_favorite)
+    FloatingActionButton fabMovieFavorite;
 
     private int mMovieId = ILLEGAL_MOVIE_ID;
 
@@ -107,6 +111,7 @@ public class MovieDetailActivity extends BaseActivity implements MovieDetailView
         initToolbar(true);
 
         presenter.bindView(this);
+        presenter.getFavoriteState(mMovieId);
         presenter.loadMovieDetails(mMovieId);
     }
 
@@ -156,7 +161,7 @@ public class MovieDetailActivity extends BaseActivity implements MovieDetailView
     }
 
     @Override
-    public void showError(String errorMessage) {
+    public void showNetworkError(String errorMessage) {
         Snackbar.make(mainContent, errorMessage, Snackbar.LENGTH_LONG)
                 .setAction("Retry", v -> {
                     presenter.loadMovieDetails(mMovieId);
@@ -167,8 +172,39 @@ public class MovieDetailActivity extends BaseActivity implements MovieDetailView
     }
 
     @Override
+    public void showDatabaseError(String errorMessage) {
+        Snackbar.make(mainContent, errorMessage, Snackbar.LENGTH_LONG)
+                .setAction("Retry", v -> {
+                    presenter.toggleFavorite(mMovieId);
+                })
+                .show();
+
+        Timber.e(errorMessage);
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(EXTRA_MOVIE_ID, mMovieId);
         super.onSaveInstanceState(outState);
+    }
+
+    @OnClick(R.id.fab_movie_favorite)
+    public void toggleFavorite() {
+        presenter.toggleFavorite(mMovieId);
+    }
+
+    @Override
+    public void markFavorite(boolean favorite) {
+        Glide.with(this).load(favorite ? R.drawable.ic_favorite_black_24dp : R.drawable.ic_favorite_border_black_24dp).into(fabMovieFavorite);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

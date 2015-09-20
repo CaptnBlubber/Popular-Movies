@@ -1,8 +1,5 @@
 package de.s3xy.popularmovies.mvp.interactor;
 
-import java.util.List;
-
-import de.s3xy.popularmovies.api.models.Movie;
 import de.s3xy.popularmovies.api.models.MovieDetail;
 import rx.Observer;
 
@@ -12,5 +9,6 @@ import rx.Observer;
 public interface MovieDetailInteractor {
 
     void loadMovieDetails(Observer<? super MovieDetail> observer, int id);
-
+    void toggleFavorite(int movieId, Observer<? super Boolean> observer);
+    boolean isMovieFavorite(int movieId);
 }

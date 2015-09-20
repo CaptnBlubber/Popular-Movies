@@ -7,8 +7,8 @@ import de.s3xy.popularmovies.mvp.interactor.MovieCollectionInteractor;
 import de.s3xy.popularmovies.mvp.interactor.MovieCollectionInteractorImpl;
 import de.s3xy.popularmovies.mvp.interactor.MovieDetailInteractor;
 import de.s3xy.popularmovies.mvp.interactor.MovieDetailInteractorImpl;
-import de.s3xy.popularmovies.mvp.presenter.MovieDetailPresenter;
 import de.s3xy.popularmovies.ui.adapter.MovieAdapter;
+import io.realm.Realm;
 
 /**
  * +        o     o       +        o
@@ -23,13 +23,13 @@ import de.s3xy.popularmovies.ui.adapter.MovieAdapter;
 public class InteractorModule {
 
     @Provides
-    public MovieCollectionInteractor provideMovieCollectionInteractor(TheMovieDBService theMovieDBService) {
-        return new MovieCollectionInteractorImpl(theMovieDBService);
+    public MovieCollectionInteractor provideMovieCollectionInteractor(TheMovieDBService theMovieDBService, Realm realmIODatabase) {
+        return new MovieCollectionInteractorImpl(theMovieDBService, realmIODatabase);
     }
 
     @Provides
-    public MovieDetailInteractor provideMovieDetailInteractor(TheMovieDBService theMovieDBService) {
-        return new MovieDetailInteractorImpl(theMovieDBService);
+    public MovieDetailInteractor provideMovieDetailInteractor(TheMovieDBService theMovieDBService, Realm realmIODatabase) {
+        return new MovieDetailInteractorImpl(theMovieDBService, realmIODatabase);
     }
 
     @Provides

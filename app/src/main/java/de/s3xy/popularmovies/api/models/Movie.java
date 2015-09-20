@@ -1,18 +1,17 @@
 
 package de.s3xy.popularmovies.api.models;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -63,6 +62,9 @@ public class Movie {
     private Integer voteCount;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+
+
+    private String httpPosterPath;
 
     /**
      * @return The adult
@@ -197,8 +199,20 @@ public class Movie {
      */
     @JsonProperty("poster_path")
     public String getPosterPath() {
-        return "https://image.tmdb.org/t/p/original" + posterPath;
+        return posterPath;
     }
+
+    public String getHTTPPosterPath() {
+        if (httpPosterPath == null) {
+            return "https://image.tmdb.org/t/p/original" + posterPath;
+        } else {
+            return httpPosterPath;
+        }
+    }
+    public void setHttpPosterPath(String httpPosterPath) {
+        this.httpPosterPath = httpPosterPath;
+    }
+
 
     /**
      * @param posterPath The poster_path

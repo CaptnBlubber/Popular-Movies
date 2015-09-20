@@ -13,4 +13,5 @@ public interface MovieCollectionView {
     void hideLoading();
     void showMovies(List<Movie> movies);
     void showError(String errorMessage);
+    void showEmptyFavorites();
 }

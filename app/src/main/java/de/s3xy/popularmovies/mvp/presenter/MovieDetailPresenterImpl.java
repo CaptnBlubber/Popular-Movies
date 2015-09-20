@@ -49,7 +49,7 @@ public class MovieDetailPresenterImpl implements MovieDetailPresenter {
 
             @Override
             public void onError(Throwable e) {
-                view.showError(e.getMessage());
+                view.showNetworkError(e.getMessage());
             }
 
             @Override
@@ -61,5 +61,30 @@ public class MovieDetailPresenterImpl implements MovieDetailPresenter {
         interactor.loadMovieDetails(obs, id);
     }
 
+    @Override
+    public void toggleFavorite(int movieId) {
+        Observer<Boolean> obs = new Observer<Boolean>() {
+            @Override
+            public void onCompleted() {
 
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                view.showDatabaseError(e.getMessage());
+            }
+
+            @Override
+            public void onNext(Boolean favorite) {
+                view.markFavorite(favorite);
+            }
+        };
+
+        interactor.toggleFavorite(movieId, obs);
+    }
+
+    @Override
+    public void getFavoriteState(int movieId) {
+        view.markFavorite(interactor.isMovieFavorite(movieId));
+    }
 }

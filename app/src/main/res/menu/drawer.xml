@@ -12,5 +12,9 @@
             android:id="@+id/drawer_best_rated_movies"
             android:title="@string/wording_best_rated_movies" />
 
+        <item
+            android:id="@+id/drawer_favorite_movies"
+            android:title="@string/wording_favorite_movies" />
+
     </group>
 </menu>
