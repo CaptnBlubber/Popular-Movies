@@ -85,6 +85,22 @@ public class MovieDetailPresenterImpl implements MovieDetailPresenter {
 
     @Override
     public void getFavoriteState(int movieId) {
-        view.markFavorite(interactor.isMovieFavorite(movieId));
+        Observer<Boolean> obs = new Observer<Boolean>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                view.showDatabaseError(e.getMessage());
+            }
+
+            @Override
+            public void onNext(Boolean favorite) {
+                view.markFavorite(favorite);
+            }
+        };
+        interactor.isMovieFavorite(obs, movieId);
     }
 }

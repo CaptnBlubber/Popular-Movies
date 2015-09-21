@@ -92,6 +92,8 @@ public class MovieDetail implements Parcelable {
     private Double voteAverage;
     @JsonProperty("vote_count")
     private Integer voteCount;
+    private List<Review> reviews;
+    private List<Trailer> trailers;
 
     /**
      * @return The adult
@@ -479,6 +481,26 @@ public class MovieDetail implements Parcelable {
     }
 
 
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setTrailers(List<Trailer> trailers) {
+        this.trailers = trailers;
+    }
+
+    public List<Trailer> getTrailers() {
+        return trailers;
+    }
+
+
+    public MovieDetail() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -510,9 +532,8 @@ public class MovieDetail implements Parcelable {
         dest.writeValue(this.video);
         dest.writeValue(this.voteAverage);
         dest.writeValue(this.voteCount);
-    }
-
-    public MovieDetail() {
+        dest.writeList(this.reviews);
+        dest.writeList(this.trailers);
     }
 
     protected MovieDetail(Parcel in) {
@@ -544,9 +565,13 @@ public class MovieDetail implements Parcelable {
         this.video = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.voteAverage = (Double) in.readValue(Double.class.getClassLoader());
         this.voteCount = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.reviews = new ArrayList<Review>();
+        in.readList(this.reviews, List.class.getClassLoader());
+        this.trailers = new ArrayList<Trailer>();
+        in.readList(this.trailers, List.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<MovieDetail> CREATOR = new Parcelable.Creator<MovieDetail>() {
+    public static final Creator<MovieDetail> CREATOR = new Creator<MovieDetail>() {
         public MovieDetail createFromParcel(Parcel source) {
             return new MovieDetail(source);
         }

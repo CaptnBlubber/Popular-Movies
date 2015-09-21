@@ -6,7 +6,10 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import de.s3xy.popularmovies.database.DataService;
+import de.s3xy.popularmovies.database.RealmDataService;
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 /**
  * +        o     o       +        o
@@ -23,7 +26,16 @@ public class DatabaseModule {
     @Provides
     @Singleton
     public Realm provideRealm(Context ctx) {
-        return Realm.getInstance(ctx);
+        RealmConfiguration.Builder builder = new RealmConfiguration.Builder(ctx);
+        return Realm.getInstance(builder.build());
     }
+
+    @Provides
+    @Singleton
+    public DataService provideDataService(Context ctx) {
+        return new RealmDataService(ctx);
+    }
+
+
 
 }

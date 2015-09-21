@@ -1,13 +1,8 @@
 package de.s3xy.popularmovies.api.models;
 
-import java.util.HashMap;
-import java.util.Map;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-import javax.annotation.Generated;
-
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -17,14 +12,13 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "iso_3166_1",
         "name"
 })
-public class ProductionCountry {
+public class ProductionCountry implements Parcelable {
 
     @JsonProperty("iso_3166_1")
     private String iso31661;
     @JsonProperty("name")
     private String name;
-    @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+
 
     /**
      * @return The iso31661
@@ -58,14 +52,33 @@ public class ProductionCountry {
         this.name = name;
     }
 
-    @JsonAnyGetter
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    @JsonAnySetter
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.iso31661);
+        dest.writeString(this.name);
     }
 
+    public ProductionCountry() {
+    }
+
+    protected ProductionCountry(Parcel in) {
+        this.iso31661 = in.readString();
+        this.name = in.readString();
+    }
+
+    public static final Parcelable.Creator<ProductionCountry> CREATOR = new Parcelable.Creator<ProductionCountry>() {
+        public ProductionCountry createFromParcel(Parcel source) {
+            return new ProductionCountry(source);
+        }
+
+        public ProductionCountry[] newArray(int size) {
+            return new ProductionCountry[size];
+        }
+    };
 }

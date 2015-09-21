@@ -22,7 +22,7 @@ public class ApplicationModule {
     private final Context appcontext;
 
     public ApplicationModule(Context context) {
-        this.appcontext = context;
+        this.appcontext = context.getApplicationContext();
     }
 
     @Provides
