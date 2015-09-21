@@ -1,8 +1,13 @@
 package de.s3xy.popularmovies.mvp.presenter;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
+
 import javax.inject.Inject;
 
 import de.s3xy.popularmovies.api.models.MovieDetail;
+import de.s3xy.popularmovies.api.models.Trailer;
 import de.s3xy.popularmovies.mvp.interactor.MovieDetailInteractor;
 import de.s3xy.popularmovies.mvp.view.MovieDetailView;
 import rx.Observer;
@@ -102,5 +107,11 @@ public class MovieDetailPresenterImpl implements MovieDetailPresenter {
             }
         };
         interactor.isMovieFavorite(obs, movieId);
+    }
+
+    @Override
+    public void playTrailer(Activity activity, Trailer trailer) {
+        String youtubeUrl = String.format("http://www.youtube.com/watch?v=%s", trailer.getKey());
+        activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(youtubeUrl)));
     }
 }

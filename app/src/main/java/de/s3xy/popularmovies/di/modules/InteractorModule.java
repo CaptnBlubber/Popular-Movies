@@ -9,6 +9,7 @@ import de.s3xy.popularmovies.mvp.interactor.MovieCollectionInteractorImpl;
 import de.s3xy.popularmovies.mvp.interactor.MovieDetailInteractor;
 import de.s3xy.popularmovies.mvp.interactor.MovieDetailInteractorImpl;
 import de.s3xy.popularmovies.ui.adapter.MovieAdapter;
+import de.s3xy.popularmovies.ui.adapter.TrailerAdapter;
 
 /**
  * +        o     o       +        o
@@ -35,6 +36,11 @@ public class InteractorModule {
     @Provides
     public MovieAdapter provideMovieAdapter() {
         return new MovieAdapter();
+    }
+
+    @Provides
+    public TrailerAdapter provideTrailerAdapter() {
+        return new TrailerAdapter();
     }
 
 }

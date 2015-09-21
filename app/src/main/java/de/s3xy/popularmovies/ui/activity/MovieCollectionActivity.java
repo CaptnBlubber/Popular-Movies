@@ -67,7 +67,7 @@ public class MovieCollectionActivity extends BaseActivity implements MovieCollec
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mListMovies.setLayoutManager(mLayoutManager);
 
-        mListMovies.addItemDecoration(new SpacingItemDecoration(getResources().getDimension(R.dimen.tweet_spacing)));
+        mListMovies.addItemDecoration(new SpacingItemDecoration(getResources().getDimension(R.dimen.card_list_spacing)));
         mListMovies.setAdapter(mMovieAdapter);
 
         presenter.bindView(this);

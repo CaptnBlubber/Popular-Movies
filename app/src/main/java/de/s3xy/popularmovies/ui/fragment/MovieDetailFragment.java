@@ -2,6 +2,8 @@ package de.s3xy.popularmovies.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +18,19 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.s3xy.popularmovies.R;
 import de.s3xy.popularmovies.api.models.MovieDetail;
+import de.s3xy.popularmovies.api.models.Review;
+import de.s3xy.popularmovies.api.models.Trailer;
+import de.s3xy.popularmovies.mvp.presenter.MovieDetailPresenter;
+import de.s3xy.popularmovies.ui.adapter.TrailerAdapter;
+import de.s3xy.popularmovies.ui.view.HorizontalSpacingItemDecoration;
 import timber.log.Timber;
 
 
@@ -33,7 +43,7 @@ import timber.log.Timber;
  * +      o         o   +       o
  * Created by rue0003a on 09.09.15..
  */
-public class MovieDetailFragment extends BaseFragment {
+public class MovieDetailFragment extends BaseFragment implements TrailerAdapter.TrailerViewHolder.ITrailerInteractions {
 
     public static String EXTRA_MOVIE = "details_fragment_movie";
 
@@ -53,9 +63,19 @@ public class MovieDetailFragment extends BaseFragment {
     TextView movieOverview;
     @Bind(R.id.movie_content)
     LinearLayout movieContent;
+    @Bind(R.id.list_trailers)
+    RecyclerView listTrailers;
+    @Bind(R.id.no_trailers_notice)
+    TextView noTrailersNotice;
 
     private MovieDetail mMovie;
 
+    @Inject
+    TrailerAdapter mTrailerAdapter;
+
+
+    @Inject
+    MovieDetailPresenter presenter;
 
     @Override
     protected void injectDependencies() {
@@ -97,6 +117,10 @@ public class MovieDetailFragment extends BaseFragment {
     }
 
     public void showMovie(MovieDetail movie) {
+
+        showReviews(movie.getReviews());
+        showTrailers(movie.getTrailers());
+
         movieTitle.setText(movie.getTitle());
         movieOverview.setText(movie.getOverview());
         movieRuntime.setText(String.format("%d Minutes", movie.getRuntime()));
@@ -119,6 +143,37 @@ public class MovieDetailFragment extends BaseFragment {
                 .into(moviePoster);
     }
 
+    public void showReviews(List<Review> reviews) {
+
+    }
+
+    public void showTrailers(List<Trailer> trailers) {
+        if (trailers.size() > 0) {
+            noTrailersNotice.setVisibility(View.GONE);
+            listTrailers.setVisibility(View.VISIBLE);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+            listTrailers.addItemDecoration(new HorizontalSpacingItemDecoration(getResources().getDimension(R.dimen.trailer_list_spacing)));
+            listTrailers.setLayoutManager(layoutManager);
+            listTrailers.setAdapter(mTrailerAdapter);
+            mTrailerAdapter.setTrailers(trailers);
+        }
+        else {
+            noTrailersNotice.setVisibility(View.VISIBLE);
+            listTrailers.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mTrailerAdapter.registerInteractionListener(this);
+    }
+
+    @Override
+    public void onPause() {
+
+        super.onPause();
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -126,4 +181,14 @@ public class MovieDetailFragment extends BaseFragment {
         super.onSaveInstanceState(outState);
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
+
+    @Override
+    public void onTrailerClicked(int position) {
+        presenter.playTrailer(getActivity(), mTrailerAdapter.getTrailer(position));
+    }
 }
