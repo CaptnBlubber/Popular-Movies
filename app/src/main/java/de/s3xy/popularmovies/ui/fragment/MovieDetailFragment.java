@@ -2,6 +2,7 @@ package de.s3xy.popularmovies.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,6 +15,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+
+import org.solovyev.android.views.llm.DividerItemDecoration;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,8 +32,10 @@ import de.s3xy.popularmovies.api.models.MovieDetail;
 import de.s3xy.popularmovies.api.models.Review;
 import de.s3xy.popularmovies.api.models.Trailer;
 import de.s3xy.popularmovies.mvp.presenter.MovieDetailPresenter;
+import de.s3xy.popularmovies.ui.adapter.ReviewAdapter;
 import de.s3xy.popularmovies.ui.adapter.TrailerAdapter;
 import de.s3xy.popularmovies.ui.view.HorizontalSpacingItemDecoration;
+import de.s3xy.popularmovies.ui.view.SpacingItemDecoration;
 import timber.log.Timber;
 
 
@@ -67,12 +72,18 @@ public class MovieDetailFragment extends BaseFragment implements TrailerAdapter.
     RecyclerView listTrailers;
     @Bind(R.id.no_trailers_notice)
     TextView noTrailersNotice;
+    @Bind(R.id.list_reviews)
+    RecyclerView listReviews;
+    @Bind(R.id.no_reviews_notice)
+    TextView noReviewsNotice;
 
     private MovieDetail mMovie;
 
     @Inject
     TrailerAdapter mTrailerAdapter;
 
+    @Inject
+    ReviewAdapter mReviewAdapter;
 
     @Inject
     MovieDetailPresenter presenter;
@@ -144,7 +155,21 @@ public class MovieDetailFragment extends BaseFragment implements TrailerAdapter.
     }
 
     public void showReviews(List<Review> reviews) {
+        if (reviews.size() > 0) {
+            noReviewsNotice.setVisibility(View.GONE);
+            listReviews.setVisibility(View.VISIBLE);
 
+            org.solovyev.android.views.llm.LinearLayoutManager layoutManager = new org.solovyev.android.views.llm.LinearLayoutManager(listReviews);
+            layoutManager.setOverScrollMode(ViewCompat.OVER_SCROLL_IF_CONTENT_SCROLLS);
+            listReviews.addItemDecoration(new SpacingItemDecoration(getResources().getDimension(R.dimen.review_list_spacing)));
+            listReviews.setLayoutManager(layoutManager);
+            listReviews.addItemDecoration(new DividerItemDecoration(getContext(), null));
+            listReviews.setAdapter(mReviewAdapter);
+            mReviewAdapter.setReviews(reviews);
+        } else {
+            noReviewsNotice.setVisibility(View.VISIBLE);
+            listReviews.setVisibility(View.GONE);
+        }
     }
 
     public void showTrailers(List<Trailer> trailers) {
@@ -156,8 +181,7 @@ public class MovieDetailFragment extends BaseFragment implements TrailerAdapter.
             listTrailers.setLayoutManager(layoutManager);
             listTrailers.setAdapter(mTrailerAdapter);
             mTrailerAdapter.setTrailers(trailers);
-        }
-        else {
+        } else {
             noTrailersNotice.setVisibility(View.VISIBLE);
             listTrailers.setVisibility(View.GONE);
         }

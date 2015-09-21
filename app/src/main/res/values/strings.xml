@@ -3,8 +3,10 @@
 
     <string name="action_settings">Settings</string>
     <string name="movie_details_title_rating">Rating</string>
+    <string name="movie_details_title_reviews">Reviews</string>
     <string name="movie_details_title_trailer">Trailer</string>
     <string name="movie_details_title_no_trailer_available">There are no Trailers available</string>
+    <string name="movie_details_title_no_reviews_available">There are no Reviews yet</string>
     <string name="movie_details_title_overview">Overview</string>
     <string name="menu_popular_movies">Popular Movies</string>
     <string name="wording_best_rated_movies">Best Rated Movies</string>

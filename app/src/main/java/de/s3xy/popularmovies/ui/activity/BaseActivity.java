@@ -80,8 +80,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -90,7 +88,9 @@ public abstract class BaseActivity extends AppCompatActivity {
                 if (isDetailActivity) {
                     finish();
                 } else {
-                    drawerLayout.openDrawer(GravityCompat.START);
+                    if (drawerLayout != null) {
+                        drawerLayout.openDrawer(GravityCompat.START);
+                    }
                 }
                 return true;
         }

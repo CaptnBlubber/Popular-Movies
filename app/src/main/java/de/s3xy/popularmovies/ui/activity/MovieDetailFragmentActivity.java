@@ -1,5 +1,9 @@
 package de.s3xy.popularmovies.ui.activity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +15,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -45,6 +51,12 @@ public class MovieDetailFragmentActivity extends BaseActivity implements MovieDe
     private static final String TAG_FRAGMENT_DETAIL = "movie_detail_activity_detail_fragment";
     private static final String EXTRA_MOVIE_FAVORITE = "movie_detail_activity_favorite";
     private static final String EXTRA_MOVIE_BACKDROP_PATH = "movie_detail_activity_backdrop_path";
+
+
+    private static final AccelerateInterpolator ACCELERATE_INTERPOLATOR = new AccelerateInterpolator();
+    private static final OvershootInterpolator OVERSHOOT_INTERPOLATOR = new OvershootInterpolator(4);
+
+
     public static String EXTRA_MOVIE_ID = "movie_detail_activity_movie_id";
     public static int ILLEGAL_MOVIE_ID = -1;
     @Bind(R.id.collapsing_toolbar)
@@ -175,7 +187,36 @@ public class MovieDetailFragmentActivity extends BaseActivity implements MovieDe
     @Override
     public void markFavorite(boolean favorite) {
         isFavorite = favorite;
-        Glide.with(this).load(favorite ? R.drawable.ic_favorite_black_24dp : R.drawable.ic_favorite_border_black_24dp).into(fabMovieFavorite);
+        animateFavorite(favorite);
+    }
+
+    public void animateFavorite(boolean favorite) {
+
+        AnimatorSet animatorSet = new AnimatorSet();
+
+        ObjectAnimator rotationAnim = ObjectAnimator.ofFloat(fabMovieFavorite, "rotation", 0f, 360f);
+        rotationAnim.setDuration(300);
+        rotationAnim.setInterpolator(ACCELERATE_INTERPOLATOR);
+
+        ObjectAnimator bounceAnimX = ObjectAnimator.ofFloat(fabMovieFavorite, "scaleX", 0.2f, 1f);
+        bounceAnimX.setDuration(300);
+        bounceAnimX.setInterpolator(OVERSHOOT_INTERPOLATOR);
+
+        ObjectAnimator bounceAnimY = ObjectAnimator.ofFloat(fabMovieFavorite, "scaleY", 0.2f, 1f);
+        bounceAnimY.setDuration(300);
+        bounceAnimY.setInterpolator(OVERSHOOT_INTERPOLATOR);
+        bounceAnimY.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                Glide.with(getApplicationContext()).load(favorite ? R.drawable.ic_favorite_black_24dp : R.drawable.ic_favorite_border_black_24dp).into(fabMovieFavorite);
+            }
+        });
+
+        animatorSet.play(rotationAnim);
+        animatorSet.play(bounceAnimX).with(bounceAnimY).after(rotationAnim);
+
+
+        animatorSet.start();
     }
 
 }

@@ -23,6 +23,7 @@
 
     <dimen name="card_list_spacing">@dimen/spacing_medium</dimen>
     <dimen name="trailer_list_spacing">@dimen/spacing_medium</dimen>
+    <dimen name="review_list_spacing">@dimen/spacing_medium</dimen>
     <dimen name="trailer_thumbnail_height">180dp</dimen>
 
 
