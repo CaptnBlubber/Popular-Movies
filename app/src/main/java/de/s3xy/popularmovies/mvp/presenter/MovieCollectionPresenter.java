@@ -19,7 +19,6 @@ public interface MovieCollectionPresenter extends Presenter<MovieCollectionView>
     void goToDetails(Activity context, Movie t);
 
     void loadPopularMovies();
-    void loadFavoriteMovies();
     void loadBestRatedMovies();
 
     void refresh();

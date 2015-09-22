@@ -30,8 +30,7 @@ public interface TheMovieDBService {
     @GET("/movie/{id}/reviews")
     Observable<MovieReviewsResponse> getMovieReviews(@Path("id") int id);
 
-
-
-    @GET("/discover/movie?sort_by=vote_average.desc")
+    // We dont want to show movies with just one good rating
+    @GET("/discover/movie?sort_by=vote_average.desc&vote_count.gte=25")
     Observable<MovieCollectionResponse> getBestRatedMovies();
 }

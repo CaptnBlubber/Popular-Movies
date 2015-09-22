@@ -28,6 +28,7 @@ public class InteractorModule {
         return new MovieCollectionInteractorImpl(theMovieDBService, dataService);
     }
 
+
     @Provides
     public MovieDetailInteractor provideMovieDetailInteractor(TheMovieDBService theMovieDBService, DataService dataService) {
         return new MovieDetailInteractorImpl(theMovieDBService, dataService);

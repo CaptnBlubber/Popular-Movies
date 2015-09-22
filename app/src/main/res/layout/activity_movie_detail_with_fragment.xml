@@ -54,7 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            tools:context=".ui.activity.MovieDetailActivity"
+            tools:context=".ui.activity.MovieDetailFragmentActivity"
             tools:ignore="MergeRootFrame"/>
 
     </android.support.v4.widget.NestedScrollView>

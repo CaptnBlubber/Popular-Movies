@@ -10,8 +10,9 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
+
         <activity
-            android:name=".ui.activity.MovieCollectionActivity"
+            android:name=".ui.activity.MovieCollectionFragmentActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,7 +22,11 @@
         </activity>
 
 
-        <activity android:name=".ui.activity.MovieDetailFragmentActivity" />
+        <activity android:name=".ui.activity.MovieDetailFragmentActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activity.MovieCollectionFragmentActivity" />
+        </activity>
 
 
     </application>

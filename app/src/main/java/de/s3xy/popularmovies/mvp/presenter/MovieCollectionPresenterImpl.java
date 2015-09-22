@@ -17,15 +17,15 @@ import rx.Observer;
  */
 public class MovieCollectionPresenterImpl implements MovieCollectionPresenter {
 
-    MovieCollectionInteractor interactor;
-    private MovieCollectionView view;
+    protected MovieCollectionInteractor interactor;
+    protected MovieCollectionView view;
 
-    private static final int MODE_INVALID = 0;
-    private static final int MODE_POPULAR_MOVIES = 1;
-    private static final int MODE_BEST_RATED_MOVIES = 2;
-    private static final int MODE_FAVORITE_MOVIES = 3;
+    protected static final int MODE_INVALID = 0;
+    protected static final int MODE_POPULAR_MOVIES = 1;
+    protected static final int MODE_BEST_RATED_MOVIES = 2;
+    protected static final int MODE_FAVORITE_MOVIES = 3;
 
-    private int mLastAPIMode = MODE_INVALID;
+    protected int mLastAPIMode = MODE_INVALID;
 
     @Inject
     public MovieCollectionPresenterImpl(MovieCollectionInteractor interactor) {
@@ -93,37 +93,7 @@ public class MovieCollectionPresenterImpl implements MovieCollectionPresenter {
         interactor.loadPopularMovies(getDefaultMovieObserver());
     }
 
-    @Override
-    public void loadFavoriteMovies() {
-        mLastAPIMode = MODE_FAVORITE_MOVIES;
 
-        Observer<List<Movie>> obs = new Observer<List<Movie>>() {
-            @Override
-            public void onCompleted() {
-                view.hideLoading();
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                view.hideLoading();
-                view.showError(e.getMessage());
-            }
-
-            @Override
-            public void onNext(List<Movie> movies) {
-                if (movies.size() > 0) {
-                    view.showMovies(movies);
-                } else {
-                    view.showEmptyFavorites();
-                }
-
-            }
-        };
-
-
-        view.showLoading();
-        interactor.loadFavoriteMovies(obs);
-    }
 
     @Override
     public void refresh() {
@@ -134,9 +104,6 @@ public class MovieCollectionPresenterImpl implements MovieCollectionPresenter {
                 break;
             case MODE_BEST_RATED_MOVIES:
                 loadBestRatedMovies();
-                break;
-            case MODE_FAVORITE_MOVIES:
-                loadFavoriteMovies();
                 break;
             default:
                 view.showError("Illegal Refresh State");

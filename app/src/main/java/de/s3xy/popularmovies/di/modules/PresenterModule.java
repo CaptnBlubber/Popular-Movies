@@ -4,7 +4,8 @@ import dagger.Module;
 import dagger.Provides;
 import de.s3xy.popularmovies.mvp.interactor.MovieCollectionInteractor;
 import de.s3xy.popularmovies.mvp.interactor.MovieDetailInteractor;
-import de.s3xy.popularmovies.mvp.interactor.MovieDetailInteractorImpl;
+import de.s3xy.popularmovies.mvp.presenter.FavoriteMovieCollectionPresenter;
+import de.s3xy.popularmovies.mvp.presenter.FavoriteMovieCollectionPresenterImpl;
 import de.s3xy.popularmovies.mvp.presenter.MovieCollectionPresenter;
 import de.s3xy.popularmovies.mvp.presenter.MovieCollectionPresenterImpl;
 import de.s3xy.popularmovies.mvp.presenter.MovieDetailPresenter;
@@ -27,6 +28,10 @@ public class PresenterModule {
         return new MovieCollectionPresenterImpl(interactor);
     }
 
+    @Provides
+    FavoriteMovieCollectionPresenter provideFavoriteMovieCollectionPresenter(MovieCollectionInteractor interactor) {
+        return new FavoriteMovieCollectionPresenterImpl(interactor);
+    }
 
     @Provides
     MovieDetailPresenter provideMovieDetailPresenter(MovieDetailInteractor interactor) {

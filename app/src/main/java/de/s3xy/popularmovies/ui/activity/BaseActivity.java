@@ -86,7 +86,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 if (isDetailActivity) {
-                    finish();
+                    onBackPressed();
                 } else {
                     if (drawerLayout != null) {
                         drawerLayout.openDrawer(GravityCompat.START);

@@ -4,8 +4,10 @@ import dagger.Subcomponent;
 import de.s3xy.popularmovies.di.modules.InteractorModule;
 import de.s3xy.popularmovies.di.modules.PresenterModule;
 import de.s3xy.popularmovies.di.scopes.ApplicationScope;
-import de.s3xy.popularmovies.ui.activity.MovieCollectionActivity;
+import de.s3xy.popularmovies.ui.activity.MovieCollectionFragmentActivity;
 import de.s3xy.popularmovies.ui.activity.MovieDetailFragmentActivity;
+import de.s3xy.popularmovies.ui.fragment.FavoriteMoviesCollectionFragment;
+import de.s3xy.popularmovies.ui.fragment.MovieCollectionFragment;
 import de.s3xy.popularmovies.ui.fragment.MovieDetailFragment;
 
 /**
@@ -21,8 +23,13 @@ import de.s3xy.popularmovies.ui.fragment.MovieDetailFragment;
 @Subcomponent(modules = {PresenterModule.class, InteractorModule.class})
 public interface MVPComponent {
 
-    void inject(MovieCollectionActivity movieCollectionActivity);
     void inject(MovieDetailFragment movieDetailFragment);
 
     void inject(MovieDetailFragmentActivity movieDetailFragmentActivity);
+
+    void inject(MovieCollectionFragment movieCollectionFragment);
+
+    void inject(FavoriteMoviesCollectionFragment movieCollectionFragment);
+
+    void inject(MovieCollectionFragmentActivity movieCollectionFragmentActivity);
 }
