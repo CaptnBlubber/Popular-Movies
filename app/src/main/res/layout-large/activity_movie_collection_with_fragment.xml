@@ -23,11 +23,6 @@
                 tools:context=".ui.activity.MovieCollectionFragmentActivity"
                 tools:ignore="MergeRootFrame" />
 
-            <View
-                android:layout_width="1dp"
-                android:layout_height="wrap_content"
-                android:background="#000000" />
-
             <FrameLayout
                 android:id="@+id/details_fragment_container"
                 android:layout_width="0dp"
