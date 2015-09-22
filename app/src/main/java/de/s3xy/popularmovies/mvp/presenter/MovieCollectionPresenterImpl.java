@@ -1,7 +1,5 @@
 package de.s3xy.popularmovies.mvp.presenter;
 
-import android.app.Activity;
-
 import java.util.List;
 
 import javax.inject.Inject;
@@ -9,7 +7,6 @@ import javax.inject.Inject;
 import de.s3xy.popularmovies.api.models.Movie;
 import de.s3xy.popularmovies.mvp.interactor.MovieCollectionInteractor;
 import de.s3xy.popularmovies.mvp.view.MovieCollectionView;
-import de.s3xy.popularmovies.ui.activity.MovieDetailFragmentActivity;
 import rx.Observer;
 
 /**
@@ -49,10 +46,6 @@ public class MovieCollectionPresenterImpl implements MovieCollectionPresenter {
     }
 
 
-    @Override
-    public void goToDetails(Activity context, Movie t) {
-        MovieDetailFragmentActivity.startFragmentDetailActivity(context, t.getId());
-    }
 
     private Observer<List<Movie>> getDefaultMovieObserver() {
 

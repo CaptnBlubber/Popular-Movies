@@ -30,9 +30,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Bind(R.id.drawer_layout)
     protected DrawerLayout drawerLayout;
 
-    @Bind(R.id.toolbar)
-    protected Toolbar toolbar;
-
     private MVPComponent mvpComponent;
 
     private boolean isDetailActivity;
@@ -42,7 +39,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.initializeInjector();
         injectDependencies();
-
     }
 
     private void initializeInjector() {
@@ -64,10 +60,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected void initToolbar(boolean childActivity) {
-
         isDetailActivity = childActivity;
 
-        setSupportActionBar(toolbar);
         final ActionBar actionBar = getSupportActionBar();
 
         if (actionBar != null) {
@@ -96,5 +90,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+
+    public abstract void setSupportActionBar(Toolbar toolbar, boolean detailFragment);
 
 }

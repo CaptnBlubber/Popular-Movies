@@ -1,5 +1,6 @@
 package de.s3xy.popularmovies.ui.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -7,6 +8,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,11 +23,10 @@ import de.s3xy.popularmovies.R;
 import de.s3xy.popularmovies.api.models.Movie;
 import de.s3xy.popularmovies.mvp.presenter.MovieCollectionPresenter;
 import de.s3xy.popularmovies.mvp.view.MovieCollectionView;
+import de.s3xy.popularmovies.ui.activity.BaseActivity;
 import de.s3xy.popularmovies.ui.adapter.MovieAdapter;
 import de.s3xy.popularmovies.ui.view.SpacingItemDecoration;
 import timber.log.Timber;
-
-
 
 
 /**
@@ -43,8 +44,13 @@ public abstract class MovieCollectionFragment extends BaseFragment implements Sw
     RecyclerView listMovies;
     @Bind(R.id.swipe_refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+
 
     private boolean resumed = false;
+
+    private CollectionFragmentInteraction mListener;
 
     protected int getLayout() {
         return R.layout.fragment_movie_collection;
@@ -79,6 +85,11 @@ public abstract class MovieCollectionFragment extends BaseFragment implements Sw
         View v = inflater.inflate(getLayout(), container, false);
         ButterKnife.bind(this, v);
 
+
+        if (getActivity() instanceof BaseActivity) {
+            ((BaseActivity) getActivity()).setSupportActionBar(toolbar, false);
+        }
+
         swipeRefreshLayout.setOnRefreshListener(this);
 
         LinearLayoutManager mLayoutManager = new GridLayoutManager(getContext(), getResources().getInteger(R.integer.movie_collection_span_count));
@@ -98,7 +109,7 @@ public abstract class MovieCollectionFragment extends BaseFragment implements Sw
         super.onResume();
         mMovieAdapter.registerMovieInteractionListener(this);
 
-        if(resumed) {
+        if (resumed) {
             presenter.refresh();
         }
     }
@@ -162,8 +173,28 @@ public abstract class MovieCollectionFragment extends BaseFragment implements Sw
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof CollectionFragmentInteraction) {
+            mListener = (CollectionFragmentInteraction) context;
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        mListener = null;
+        super.onDetach();
+    }
+
+    @Override
     public void onMovieClicked(int position) {
         Movie t = mMovieAdapter.getMovie(position);
-        presenter.goToDetails(getActivity(), t);
+        if (mListener != null) {
+            mListener.showDetails(t);
+        }
+    }
+
+    public interface CollectionFragmentInteraction {
+        void showDetails(Movie movie);
     }
 }
