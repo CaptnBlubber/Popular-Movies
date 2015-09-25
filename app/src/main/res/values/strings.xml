@@ -13,4 +13,14 @@
     <string name="wording_favorite_movies">Favorite Movies</string>
     <string name="wording_missing_favorites_title">You don\'t have any Favorite Movies yet.</string>
     <string name="wording_missing_favorites_hint">You can add Movies to your Favorites on a Movie Detail Page by clicking the Star Icon</string>
+    <string name="wording_settings_share">Share</string>
+    <string name="share_dialog_title">Share with…</string>
+
+    <string name="share_text_trailer" formatted="false">Checkout the Trailer: %s</string>
+    <string name="share_text_movie_title" formatted="false">%s is awesome!</string>
+    <string name="movie_detail_runtime_format" formatted="false">%d Minutes</string>
+    <string name="movie_detail_rating_format" formatted="false">%.1f Average | %d Votes</string>
+
+    <string name="wording_retry">Retry</string>
+    <string name="wording_general_error">Ooops, something went wrong.</string>
 </resources>

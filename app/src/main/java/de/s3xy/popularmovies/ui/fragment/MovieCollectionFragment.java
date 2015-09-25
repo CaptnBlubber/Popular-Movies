@@ -153,8 +153,8 @@ public abstract class MovieCollectionFragment extends BaseFragment implements Sw
 
     @Override
     public void showError(String errorMessage) {
-        Snackbar.make(listMovies, errorMessage, Snackbar.LENGTH_LONG)
-                .setAction("Retry", v -> {
+        Snackbar.make(listMovies, R.string.wording_general_error, Snackbar.LENGTH_LONG)
+                .setAction(R.string.wording_retry, v -> {
                     onRefresh();
                 })
                 .show();

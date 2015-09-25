@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 
 import butterknife.ButterKnife;
 import de.s3xy.popularmovies.R;
@@ -85,4 +86,9 @@ public class MovieDetailFragmentActivity extends BaseActivity {
     }
 
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.details, menu);
+        return true;
+    }
 }

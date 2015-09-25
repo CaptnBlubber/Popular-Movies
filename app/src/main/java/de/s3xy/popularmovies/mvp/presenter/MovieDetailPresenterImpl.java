@@ -139,7 +139,6 @@ public class MovieDetailPresenterImpl implements MovieDetailPresenter {
 
     @Override
     public void playTrailer(Activity activity, Trailer trailer) {
-        String youtubeUrl = String.format("http://www.youtube.com/watch?v=%s", trailer.getKey());
-        activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(youtubeUrl)));
+        activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(trailer.getYoutubeUrl())));
     }
 }

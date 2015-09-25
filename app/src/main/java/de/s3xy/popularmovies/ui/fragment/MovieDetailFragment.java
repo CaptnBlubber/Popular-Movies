@@ -4,6 +4,8 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -16,10 +18,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -28,6 +32,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.flipboard.bottomsheet.BottomSheetLayout;
+import com.flipboard.bottomsheet.commons.IntentPickerSheetView;
 
 import org.solovyev.android.views.llm.DividerItemDecoration;
 
@@ -65,9 +71,10 @@ import timber.log.Timber;
  * +      o         o   +       o
  * Created by rue0003a on 09.09.15..
  */
-public class MovieDetailFragment extends BaseFragment implements MovieDetailView, TrailerAdapter.TrailerViewHolder.ITrailerInteractions {
+public class MovieDetailFragment extends BaseFragment implements MovieDetailView, TrailerAdapter.TrailerViewHolder.ITrailerInteractions, Toolbar.OnMenuItemClickListener {
 
     private final static String TAG = "details_fragment_movie_";
+    private MovieDetail mMovie;
 
     public static String getTag(int movieId) {
         return TAG + movieId;
@@ -113,6 +120,8 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailView
     FloatingActionButton fabMovieFavorite;
     @Bind(R.id.main_content)
     CoordinatorLayout mainContent;
+    @Bind(R.id.bottomsheet)
+    BottomSheetLayout bottomSheetLayout;
 
 
     private int mMovieId = ILLEGAL_MOVIE_ID;
@@ -153,10 +162,13 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailView
         View v = inflater.inflate(R.layout.fragment_movie_detail, container, false);
         ButterKnife.bind(this, v);
 
+
         if (getActivity() instanceof BaseActivity) {
             ((BaseActivity) getActivity()).setSupportActionBar(toolbar, true);
         }
 
+        toolbar.setOnMenuItemClickListener(this);
+        toolbar.inflateMenu(R.menu.details);
 
         presenter.bindView(this);
         presenter.getFavoriteState(mMovieId);
@@ -185,6 +197,8 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailView
     @Override
     public void showMovie(MovieDetail movie) {
 
+        mMovie = movie;
+
         collapsingToolbar.setTitle(movie.getTitle());
         loadBackdrop(movie.getFullBackdropPath());
 
@@ -193,12 +207,12 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailView
 
         movieTitle.setText(movie.getTitle());
         movieOverview.setText(movie.getOverview());
-        movieRuntime.setText(String.format("%d Minutes", movie.getRuntime()));
+        movieRuntime.setText(String.format(getResources().getString(R.string.movie_detail_runtime_format), movie.getRuntime()));
         movieRating.setRating(movie.getVoteAverage().floatValue());
-        movieRatingCount.setText(String.format("%.1f Average | %d Votes", movie.getVoteAverage(), movie.getVoteCount()));
+        movieRatingCount.setText(String.format(getResources().getString(R.string.movie_detail_rating_format), movie.getVoteAverage(), movie.getVoteCount()));
 
         try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat dateFormat =  new SimpleDateFormat("yyyy-MM-dd");
             Date newDate = dateFormat.parse(movie.getReleaseDate());
             dateFormat = new SimpleDateFormat("dd MMM yyyy");
             movieReleaseDate.setText(dateFormat.format(newDate));
@@ -254,7 +268,7 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailView
 
     @Override
     public void onPause() {
-
+        presenter.unbindView();
         super.onPause();
     }
 
@@ -288,8 +302,8 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailView
 
     @Override
     public void showNetworkError(String errorMessage) {
-        Snackbar.make(mainContent, errorMessage, Snackbar.LENGTH_LONG)
-                .setAction("Retry", v -> {
+        Snackbar.make(mainContent, R.string.wording_general_error, Snackbar.LENGTH_LONG)
+                .setAction(R.string.wording_retry, v -> {
                     presenter.loadMovieDetailsFromNetwork(mMovieId);
                 })
                 .show();
@@ -299,8 +313,9 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailView
 
     @Override
     public void showDatabaseError(String errorMessage) {
-        Snackbar.make(mainContent, errorMessage, Snackbar.LENGTH_LONG)
-                .setAction("Retry", v -> {
+
+        Snackbar.make(mainContent, R.string.wording_general_error, Snackbar.LENGTH_LONG)
+                .setAction(R.string.wording_retry, v -> {
                     presenter.toggleFavorite(mMovieId);
                 })
                 .show();
@@ -362,5 +377,65 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailView
 
 
         animatorSet.start();
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        if (item.getItemId() == R.id.settings_share) {
+            // Hide the keyboard
+            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(toolbar.findViewById(R.id.settings_share).getWindowToken(), 0);
+
+            final Intent shareIntent = new Intent(Intent.ACTION_SEND);
+
+            StringBuilder shareTextBuilder = new StringBuilder();
+
+            shareTextBuilder.append(String.format(getResources().getString(R.string.share_text_movie_title), mMovie.getTitle()));
+
+            if (mTrailerAdapter.getItemCount() > 0) {
+                shareTextBuilder.append(System.getProperty("line.separator"));
+                Trailer trailer = mTrailerAdapter.getTrailer(0);
+                shareTextBuilder.append(String.format(getResources().getString(R.string.share_text_trailer), trailer.getYoutubeUrl()));
+            }
+
+
+            shareIntent.putExtra(Intent.EXTRA_TEXT, shareTextBuilder.toString());
+            shareIntent.setType("text/plain");
+
+
+            IntentPickerSheetView intentPickerSheet =
+                    new IntentPickerSheetView(
+                            getContext(),
+                            shareIntent,
+                            getResources().getString(R.string.share_dialog_title),
+                            activityInfo -> {
+                                bottomSheetLayout.dismissSheet();
+                                startActivity(activityInfo.getConcreteIntent(shareIntent));
+                            });
+
+//            // Filter out built in sharing options such as bluetooth and beam.
+//            intentPickerSheet.setFilter(new IntentPickerSheetView.Filter() {
+//                @Override
+//                public boolean include(IntentPickerSheetView.ActivityInfo info) {
+//                    return !info.componentName.getPackageName().startsWith("com.android");
+//                }
+//            });
+//            // Sort activities in reverse order for no good reason
+//            intentPickerSheet.setSortMethod(new Comparator<IntentPickerSheetView.ActivityInfo>() {
+//                @Override
+//                public int compare(IntentPickerSheetView.ActivityInfo lhs, IntentPickerSheetView.ActivityInfo rhs) {
+//                    return rhs.label.compareTo(lhs.label);
+//                }
+//            });
+
+            // Add custom mixin example
+//            Drawable customDrawable = ResourcesCompat.getDrawable(getResources(), R.mipmap.ic_launcher, null);
+//            IntentPickerSheetView.ActivityInfo customInfo = new IntentPickerSheetView.ActivityInfo(customDrawable, "Custom mix-in", PickerActivity.this, MainActivity.class);
+//            intentPickerSheet.setMixins(Collections.singletonList(customInfo));
+
+            bottomSheetLayout.showWithSheetView(intentPickerSheet);
+        }
+
+        return false;
     }
 }

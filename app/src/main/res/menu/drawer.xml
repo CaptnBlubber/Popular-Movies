@@ -6,14 +6,17 @@
         <item
             android:id="@+id/drawer_popular_movies"
             android:checked="true"
+            android:icon="@drawable/ic_whatshot_black_24dp"
             android:title="@string/menu_popular_movies" />
 
         <item
             android:id="@+id/drawer_best_rated_movies"
+            android:icon="@drawable/ic_star_black_24dp"
             android:title="@string/wording_best_rated_movies" />
 
         <item
             android:id="@+id/drawer_favorite_movies"
+            android:icon="@drawable/ic_favorite_black_24dp"
             android:title="@string/wording_favorite_movies" />
 
     </group>
