@@ -15,7 +15,8 @@ import de.s3xy.popularmovies.mvp.view.MovieDetailView;
  * Created by arueggeberg on 31.07.15..
  */
 public interface MovieDetailPresenter extends Presenter<MovieDetailView>{
-    void loadMovieDetails(int id);
+    void loadMovieDetailsFromNetwork(int id);
+    void loadMovieDetailsFromDatabase(int id);
     void toggleFavorite(int id);
     void getFavoriteState(int id);
     void playTrailer(Activity activity, Trailer trailer);

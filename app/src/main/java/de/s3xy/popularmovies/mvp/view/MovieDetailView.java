@@ -18,5 +18,5 @@ public interface MovieDetailView {
     void showMovie(MovieDetail movie);
     void showNetworkError(String errorMessage);
     void showDatabaseError(String errorMessage);
-    void markFavorite(boolean favorite);
+    void markFavorite(boolean favorite, boolean animated);
 }

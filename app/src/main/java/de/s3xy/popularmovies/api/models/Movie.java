@@ -57,7 +57,7 @@ public class Movie {
     private Integer voteCount;
 
 
-    private String httpPosterPath;
+    private String fullPosterPath;
 
     /**
      * @return The adult
@@ -196,14 +196,14 @@ public class Movie {
     }
 
     public String getHTTPPosterPath() {
-        if (httpPosterPath == null) {
+        if (fullPosterPath == null) {
             return "https://image.tmdb.org/t/p/original" + posterPath;
         } else {
-            return httpPosterPath;
+            return fullPosterPath;
         }
     }
-    public void setHttpPosterPath(String httpPosterPath) {
-        this.httpPosterPath = httpPosterPath;
+    public void setFullPosterPath(String fullPosterPath) {
+        this.fullPosterPath = fullPosterPath;
     }
 
 

@@ -11,6 +11,7 @@ import de.s3xy.popularmovies.api.models.Trailer;
 import de.s3xy.popularmovies.mvp.interactor.MovieDetailInteractor;
 import de.s3xy.popularmovies.mvp.view.MovieDetailView;
 import rx.Observer;
+import timber.log.Timber;
 
 /**
  * Created by arueggeberg on 31.07.15.
@@ -43,7 +44,7 @@ public class MovieDetailPresenterImpl implements MovieDetailPresenter {
 
 
     @Override
-    public void loadMovieDetails(int id) {
+    public void loadMovieDetailsFromNetwork(int id) {
         view.showLoading();
 
         Observer<MovieDetail> obs = new Observer<MovieDetail>() {
@@ -54,6 +55,7 @@ public class MovieDetailPresenterImpl implements MovieDetailPresenter {
 
             @Override
             public void onError(Throwable e) {
+                Timber.e(e.getMessage(), e);
                 view.showNetworkError(e.getMessage());
             }
 
@@ -63,7 +65,32 @@ public class MovieDetailPresenterImpl implements MovieDetailPresenter {
             }
 
         };
-        interactor.loadMovieDetails(obs, id);
+        interactor.loadMovieDetailsFromNetwork(obs, id);
+    }
+
+    @Override
+    public void loadMovieDetailsFromDatabase(int id) {
+        view.showLoading();
+
+        Observer<MovieDetail> obs = new Observer<MovieDetail>() {
+            @Override
+            public void onCompleted() {
+                view.hideLoading();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Timber.e(e.getMessage(), e);
+                view.showDatabaseError(e.getMessage());
+            }
+
+            @Override
+            public void onNext(MovieDetail movieDetail) {
+                view.showMovie(movieDetail);
+            }
+
+        };
+        interactor.loadMovieDetailsFromDatabase(obs, id);
     }
 
     @Override
@@ -71,17 +98,18 @@ public class MovieDetailPresenterImpl implements MovieDetailPresenter {
         Observer<Boolean> obs = new Observer<Boolean>() {
             @Override
             public void onCompleted() {
-
             }
 
             @Override
             public void onError(Throwable e) {
+                Timber.e(e.getMessage(), e);
+
                 view.showDatabaseError(e.getMessage());
             }
 
             @Override
             public void onNext(Boolean favorite) {
-                view.markFavorite(favorite);
+                view.markFavorite(favorite, true);
             }
         };
 
@@ -103,7 +131,7 @@ public class MovieDetailPresenterImpl implements MovieDetailPresenter {
 
             @Override
             public void onNext(Boolean favorite) {
-                view.markFavorite(favorite);
+                view.markFavorite(favorite, false);
             }
         };
         interactor.isMovieFavorite(obs, movieId);

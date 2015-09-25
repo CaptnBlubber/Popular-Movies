@@ -29,7 +29,7 @@ public class MovieDetailInteractorImpl implements MovieDetailInteractor {
     }
 
     @Override
-    public void loadMovieDetails(Observer<? super MovieDetail> observer, int id) {
+    public void loadMovieDetailsFromNetwork(Observer<? super MovieDetail> observer, int id) {
         Observable
                 .combineLatest(
                         theMovieDBService.getMovieDetails(id),
@@ -44,6 +44,15 @@ public class MovieDetailInteractorImpl implements MovieDetailInteractor {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
 
+    }
+
+    @Override
+    public void loadMovieDetailsFromDatabase(Observer<? super MovieDetail> observer, int id) {
+        dataService
+                .getFavoriteMovie(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
     }
 
     @Override
@@ -70,8 +79,16 @@ public class MovieDetailInteractorImpl implements MovieDetailInteractor {
                             .subscribeOn(Schedulers.io())
                             .subscribe(observer);
                 } else {
-                    theMovieDBService
-                            .getMovieDetails(movieId)
+                    Observable
+                            .combineLatest(
+                                    theMovieDBService.getMovieDetails(movieId),
+                                    theMovieDBService.getMovieReviews(movieId),
+                                    theMovieDBService.getMovieTrailers(movieId),
+                                    (movieDetail, movieReviewsResponse, movieTrailersResponse) -> {
+                                        movieDetail.setReviews(movieReviewsResponse.getResults());
+                                        movieDetail.setTrailers(movieTrailersResponse.getResults());
+                                        return movieDetail;
+                                    })
                             .concatMap(dataService::addFavoriteMovie)
                             .map(movie -> movie != null)
                             .observeOn(AndroidSchedulers.mainThread())

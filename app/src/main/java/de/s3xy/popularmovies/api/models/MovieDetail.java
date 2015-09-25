@@ -95,6 +95,10 @@ public class MovieDetail implements Parcelable {
     private List<Review> reviews;
     private List<Trailer> trailers;
 
+
+    private String fullBackdropPath;
+    private String fullPosterPath;
+
     /**
      * @return The adult
      */
@@ -116,7 +120,7 @@ public class MovieDetail implements Parcelable {
      */
     @JsonProperty("backdrop_path")
     public String getBackdropPath() {
-        return "https://image.tmdb.org/t/p/original" + backdropPath;
+        return backdropPath;
     }
 
     /**
@@ -125,6 +129,34 @@ public class MovieDetail implements Parcelable {
     @JsonProperty("backdrop_path")
     public void setBackdropPath(String backdropPath) {
         this.backdropPath = backdropPath;
+    }
+
+
+    public String getFullBackdropPath() {
+        if(fullBackdropPath != null) {
+            return fullBackdropPath;
+        }
+        else {
+            return "https://image.tmdb.org/t/p/original" + getBackdropPath();
+        }
+    }
+
+    public void setFullBackdropPath(String fullBackdropPath) {
+        this.fullBackdropPath = fullBackdropPath;
+    }
+
+    public String getFullPosterPath() {
+        if(fullPosterPath != null) {
+            return fullPosterPath;
+        }
+        else {
+            return "https://image.tmdb.org/t/p/original" + getPosterPath();
+        }
+
+    }
+
+    public void setFullPosterPath(String fullPosterPath) {
+        this.fullPosterPath = fullPosterPath;
     }
 
 
@@ -277,7 +309,7 @@ public class MovieDetail implements Parcelable {
      */
     @JsonProperty("poster_path")
     public String getPosterPath() {
-        return "https://image.tmdb.org/t/p/original" + posterPath;
+        return posterPath;
     }
 
     /**

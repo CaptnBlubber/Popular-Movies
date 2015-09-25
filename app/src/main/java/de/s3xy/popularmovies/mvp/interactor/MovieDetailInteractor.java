@@ -8,7 +8,8 @@ import rx.Observer;
  */
 public interface MovieDetailInteractor {
 
-    void loadMovieDetails(Observer<? super MovieDetail> observer, int id);
+    void loadMovieDetailsFromNetwork(Observer<? super MovieDetail> observer, int id);
+    void loadMovieDetailsFromDatabase(Observer<? super MovieDetail> observer, int id);
     void toggleFavorite(int movieId, Observer<? super Boolean> observer);
     void isMovieFavorite(Observer<Boolean> obs, int movieId);
 }

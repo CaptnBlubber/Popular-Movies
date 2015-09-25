@@ -8,7 +8,8 @@ import rx.Observable;
 
 public interface DataService {
     Observable<List<Movie>> favoriteMovies();
-    Observable<Movie> addFavoriteMovie(MovieDetail movie);
+    Observable<MovieDetail> getFavoriteMovie(int movieId);
+    Observable<MovieDetail> addFavoriteMovie(MovieDetail movie);
     Observable<Boolean> containsMovie(int movieId);
     Observable<Boolean> deleteMovie(int movieID);
 

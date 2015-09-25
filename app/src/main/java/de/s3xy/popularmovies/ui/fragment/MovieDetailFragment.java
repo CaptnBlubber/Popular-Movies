@@ -52,6 +52,7 @@ import de.s3xy.popularmovies.ui.adapter.ReviewAdapter;
 import de.s3xy.popularmovies.ui.adapter.TrailerAdapter;
 import de.s3xy.popularmovies.ui.view.HorizontalSpacingItemDecoration;
 import de.s3xy.popularmovies.ui.view.SpacingItemDecoration;
+import de.s3xy.popularmovies.utils.NetworkUtils;
 import timber.log.Timber;
 
 
@@ -159,7 +160,12 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailView
 
         presenter.bindView(this);
         presenter.getFavoriteState(mMovieId);
-        presenter.loadMovieDetails(mMovieId);
+
+        if (NetworkUtils.isNetworkAvailable(getContext())) {
+            presenter.loadMovieDetailsFromNetwork(mMovieId);
+        } else {
+            presenter.loadMovieDetailsFromDatabase(mMovieId);
+        }
 
         return v;
     }
@@ -180,7 +186,7 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailView
     public void showMovie(MovieDetail movie) {
 
         collapsingToolbar.setTitle(movie.getTitle());
-        loadBackdrop(movie.getBackdropPath());
+        loadBackdrop(movie.getFullBackdropPath());
 
         showReviews(movie.getReviews());
         showTrailers(movie.getTrailers());
@@ -202,7 +208,7 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailView
         }
 
         Glide.with(this)
-                .load(movie.getPosterPath())
+                .load(movie.getFullPosterPath())
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(moviePoster);
     }
@@ -284,7 +290,7 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailView
     public void showNetworkError(String errorMessage) {
         Snackbar.make(mainContent, errorMessage, Snackbar.LENGTH_LONG)
                 .setAction("Retry", v -> {
-                    presenter.loadMovieDetails(mMovieId);
+                    presenter.loadMovieDetailsFromNetwork(mMovieId);
                 })
                 .show();
 
@@ -308,8 +314,17 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailView
     }
 
     @Override
-    public void markFavorite(boolean favorite) {
-        animateFavorite(favorite);
+    public void markFavorite(boolean favorite, boolean animated) {
+        if (animated) {
+            animateFavorite(favorite);
+        } else {
+            setFavoriteDrawable(favorite);
+        }
+
+    }
+
+    public void setFavoriteDrawable(boolean favorite) {
+        Glide.with(getContext()).load(favorite ? R.drawable.ic_favorite_black_24dp : R.drawable.ic_favorite_border_black_24dp).into(fabMovieFavorite);
     }
 
 
@@ -338,7 +353,7 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailView
         bounceAnimY.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
-                Glide.with(getContext()).load(favorite ? R.drawable.ic_favorite_black_24dp : R.drawable.ic_favorite_border_black_24dp).into(fabMovieFavorite);
+                setFavoriteDrawable(favorite);
             }
         });
 
