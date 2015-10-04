@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import java.util.List;
 
@@ -48,7 +49,27 @@ public abstract class MovieCollectionFragment extends BaseFragment implements Sw
     Toolbar toolbar;
 
 
+    @Bind(R.id.offline_notice)
+    @Nullable
+    LinearLayout offlineNotice;
+
+
+
+    protected void showOfflineNotice() {
+        if(offlineNotice != null) {
+            offlineNotice.setVisibility(View.VISIBLE);
+        }
+    }
+
+    protected void hideOfflineNotice() {
+        if(offlineNotice != null) {
+            offlineNotice.setVisibility(View.GONE);
+        }
+    }
+
+
     private boolean resumed = false;
+
 
     private CollectionFragmentInteraction mListener;
 
@@ -104,11 +125,12 @@ public abstract class MovieCollectionFragment extends BaseFragment implements Sw
         return v;
     }
 
+
+
     @Override
     public void onResume() {
         super.onResume();
         mMovieAdapter.registerMovieInteractionListener(this);
-
         if (resumed) {
             presenter.refresh();
         }
@@ -128,6 +150,7 @@ public abstract class MovieCollectionFragment extends BaseFragment implements Sw
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        presenter.unbindView();
         ButterKnife.unbind(this);
     }
 
@@ -143,7 +166,9 @@ public abstract class MovieCollectionFragment extends BaseFragment implements Sw
 
     @Override
     public void hideLoading() {
-        swipeRefreshLayout.setRefreshing(false);
+        if(swipeRefreshLayout != null) {
+            swipeRefreshLayout.setRefreshing(false);
+        }
     }
 
     @Override
@@ -168,9 +193,7 @@ public abstract class MovieCollectionFragment extends BaseFragment implements Sw
     }
 
     @Override
-    public void onRefresh() {
-        presenter.refresh();
-    }
+    public abstract void onRefresh();
 
     @Override
     public void onAttach(Context context) {

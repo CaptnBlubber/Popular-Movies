@@ -13,6 +13,10 @@
     <string name="wording_favorite_movies">Favorite Movies</string>
     <string name="wording_missing_favorites_title">You don\'t have any Favorite Movies yet.</string>
     <string name="wording_missing_favorites_hint">You can add Movies to your Favorites on a Movie Detail Page by clicking the Star Icon</string>
+    <string name="wording_offline_title">You are offline</string>
+    <string name="wording_offline_hint">Check your Internet Connection and make sure your Device
+        has access to the Internet and themoviedb.com. Only your Favorite Saved Movies are available
+        for offline usage </string>
     <string name="wording_settings_share">Share</string>
     <string name="share_dialog_title">Share with…</string>
 
@@ -22,5 +26,5 @@
     <string name="movie_detail_rating_format" formatted="false">%.1f Average | %d Votes</string>
 
     <string name="wording_retry">Retry</string>
-    <string name="wording_general_error">Ooops, something went wrong.</string>
+    <string name="wording_general_error">You do not have an Active Internet Connection</string>
 </resources>

@@ -59,7 +59,7 @@ public class FavoriteMoviesCollectionFragment extends MovieCollectionFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
-        injectedPresenter.loadFavoriteMovies();
+        onRefresh();
         return v;
     }
 
@@ -77,4 +77,8 @@ public class FavoriteMoviesCollectionFragment extends MovieCollectionFragment {
         super.showMovies(movies);
     }
 
+    @Override
+    public void onRefresh() {
+        injectedPresenter.loadFavoriteMovies();
+    }
 }

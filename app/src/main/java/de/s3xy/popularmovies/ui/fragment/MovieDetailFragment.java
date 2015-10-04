@@ -263,12 +263,12 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailView
     @Override
     public void onResume() {
         super.onResume();
+
         mTrailerAdapter.registerInteractionListener(this);
     }
 
     @Override
     public void onPause() {
-        presenter.unbindView();
         super.onPause();
     }
 
@@ -282,6 +282,7 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailView
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+        presenter.unbindView();
     }
 
     @Override
